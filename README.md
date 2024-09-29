@@ -70,6 +70,7 @@ sudo docker build -t python -f Dockerfile.python .
 
 ```
  sudo docker compose up -d
+ curl -L http://127.0.0.1:8090
 ```
 
 ![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/2.png)
@@ -82,6 +83,33 @@ sudo docker build -t python -f Dockerfile.python .
 5. (Необязательная часть) Дополнительно настройте remote ssh context к вашему серверу. Отобразите список контекстов и результат удаленного выполнения ```docker ps -a```
 6. В качестве ответа повторите  sql-запрос и приложите скриншот с данного сервера, bash-скрипт и ссылку на fork-репозиторий.
 
+```
+#!/bin/bash
+
+echo "clone"
+git clone  https://github.com/MaratKN/shvirtd-example-python.git
+echo "clone done"
+
+echo "enter"
+cd /opt/shvirtd-example-python
+echo "done enter"
+
+echo "create container"
+sudo docker compose up -d
+echo "done create container"
+
+echo "list containers"
+sudo docker ps
+```
+
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/3.png)
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/4.png)
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/5.png)
+
+https://github.com/MaratKN/shvirtd-example-python
+
+
+
 ## Задача 5 (*)
 1. Напишите и задеплойте на вашу облачную ВМ bash скрипт, который произведет резервное копирование БД mysql в директорию "/opt/backup" с помощью запуска в сети "backend" контейнера из образа ```schnitzler/mysqldump``` при помощи ```docker run ...``` команды. Подсказка: "документация образа."
 2. Протестируйте ручной запуск
@@ -92,9 +120,32 @@ sudo docker build -t python -f Dockerfile.python .
 Скачайте docker образ ```hashicorp/terraform:latest``` и скопируйте бинарный файл ```/bin/terraform``` на свою локальную машину, используя dive и docker save.
 Предоставьте скриншоты  действий .
 
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/6.png)
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/7.png)
+
+```
+sudo docker pull hashicorp/terraform:latest
+sudo docker run -ti --rm -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive hashicorp/terraform
+sudo docker image  save -o  /tmp/image.tar.gz hashicorp/terraform
+cd /tmp/
+sudo tar xf /tmp/image.tar.gz
+cd blobs/sha256
+sudo tar xf 9861417e72dc021d24afce363d6a3f0e9fed05399f1a7c6610012fc74b1bb346    
+ls -la bin/terraform
+```
+
+
 ## Задача 6.1
 Добейтесь аналогичного результата, используя docker cp.  
 Предоставьте скриншоты  действий .
+
+```
+root@debian1:~# docker create --name terraform_1 hashicorp/terraform
+root@debian1:~# docker cp terraform_1:/bin/terraform ./
+root@debian1:~# ll
+```
+
+![alt text](https://github.com/MaratKN/virtd-homeworks_2/blob/main/7.png)
 
 ## Задача 6.2 (**)
 Предложите способ извлечь файл из контейнера, используя только команду docker build и любой Dockerfile.  
